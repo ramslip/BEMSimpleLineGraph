@@ -151,7 +151,7 @@ typedef NS_ENUM(NSInteger, BEMInternalTags)
     _colorTop = [UIColor colorWithRed:0 green:122.0/255.0 blue:255/255 alpha:1];
     _colorLine = [UIColor colorWithRed:255.0/255.0 green:255.0/255.0 blue:255.0/255.0 alpha:1];
     _colorBottom = [UIColor colorWithRed:0 green:122.0/255.0 blue:255/255 alpha:1];
-    _colorPoint = [UIColor colorWithWhite:1.0 alpha:0.7];
+    _colorPoint = [UIColor whiteColor];
     _colorTouchInputLine = [UIColor grayColor];
     _colorBackgroundPopUplabel = [UIColor whiteColor];
     _alphaTouchInputLine = 0.2;
@@ -174,7 +174,6 @@ typedef NS_ENUM(NSInteger, BEMInternalTags)
     
     // Set Default Feature Values
     _enableTouchReport = NO;
-    _touchReportFingersRequired = 1;
     _enablePopUpReport = NO;
     _enableBezierCurve = NO;
     _enableXAxisLabel = YES;
@@ -348,7 +347,8 @@ typedef NS_ENUM(NSInteger, BEMInternalTags)
                 self.popUpView.alpha = 0;
                 [self addSubview:self.popUpView];
             } else {
-                NSString *maxValueString = [NSString stringWithFormat:self.formatStringForValues, [self calculateMaximumPointValue].doubleValue];
+                /*NSString *maxValueString = [NSString stringWithFormat:self.formatStringForValues, [self calculateMaximumPointValue].doubleValue];*/
+                NSString *maxValueString = @"30-я неделя 2016г. \n";
                 NSString *minValueString = [NSString stringWithFormat:self.formatStringForValues, [self calculateMinimumPointValue].doubleValue];
                 
                 NSString *longestString = @"";
@@ -371,10 +371,12 @@ typedef NS_ENUM(NSInteger, BEMInternalTags)
                 
                 NSString *mString = [fullString stringByReplacingOccurrencesOfString:@"[0-9-]" withString:@"N" options:NSRegularExpressionSearch range:NSMakeRange(0, [longestString length])];
                 
-                self.popUpLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 200, 20)];
+                self.popUpLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 200, 50)];
                 self.popUpLabel.text = mString;
                 self.popUpLabel.textAlignment = 1;
-                self.popUpLabel.numberOfLines = 1;
+                self.popUpLabel.textColor = [UIColor whiteColor];
+                self.popUpLabel.numberOfLines = 0;
+                self.popUpLabel.lineBreakMode = NSLineBreakByWordWrapping;
                 self.popUpLabel.font = self.labelFont;
                 self.popUpLabel.backgroundColor = [UIColor clearColor];
                 [self.popUpLabel sizeToFit];
@@ -540,12 +542,13 @@ typedef NS_ENUM(NSInteger, BEMInternalTags)
                     if (self.displayDotsOnly == YES) circleDot.alpha = 1.0;
                     else {
                         if (self.alwaysDisplayDots == NO) circleDot.alpha = 0;
-                        else circleDot.alpha = 1.0;
+                        else circleDot.alpha = 0.7;
                     }
                 } else {
                     if (self.displayDotsWhileAnimating) {
                         [UIView animateWithDuration:(float)self.animationGraphEntranceTime/numberOfPoints delay:(float)i*((float)self.animationGraphEntranceTime/numberOfPoints) options:UIViewAnimationOptionCurveLinear animations:^{
-                            circleDot.alpha = 1.0;
+                            if (self.displayDotsOnly == YES) circleDot.alpha = 1.0;
+                            else circleDot.alpha = 0.7;
                         } completion:^(BOOL finished) {
                             if (self.alwaysDisplayDots == NO && self.displayDotsOnly == NO) {
                                 [UIView animateWithDuration:0.3 delay:0 options:UIViewAnimationOptionCurveEaseOut animations:^{
@@ -1200,7 +1203,7 @@ typedef NS_ENUM(NSInteger, BEMInternalTags)
 
 - (NSNumber *)calculatePointValueAverage {
     NSArray *filteredArray = [self calculationDataPoints];
-    if (filteredArray.count == 0) return [NSNumber numberWithInt:0];
+    if (filteredArray.count == 0) return 0;
     
     NSExpression *expression = [NSExpression expressionForFunction:@"average:" arguments:@[[NSExpression expressionForConstantValue:filteredArray]]];
     NSNumber *value = [expression expressionValueWithObject:nil context:nil];
@@ -1210,7 +1213,7 @@ typedef NS_ENUM(NSInteger, BEMInternalTags)
 
 - (NSNumber *)calculatePointValueSum {
     NSArray *filteredArray = [self calculationDataPoints];
-    if (filteredArray.count == 0) return [NSNumber numberWithInt:0];
+    if (filteredArray.count == 0) return 0;
     
     NSExpression *expression = [NSExpression expressionForFunction:@"sum:" arguments:@[[NSExpression expressionForConstantValue:filteredArray]]];
     NSNumber *value = [expression expressionValueWithObject:nil context:nil];
@@ -1220,7 +1223,7 @@ typedef NS_ENUM(NSInteger, BEMInternalTags)
 
 - (NSNumber *)calculatePointValueMedian {
     NSArray *filteredArray = [self calculationDataPoints];
-    if (filteredArray.count == 0) return [NSNumber numberWithInt:0];
+    if (filteredArray.count == 0) return 0;
     
     NSExpression *expression = [NSExpression expressionForFunction:@"median:" arguments:@[[NSExpression expressionForConstantValue:filteredArray]]];
     NSNumber *value = [expression expressionValueWithObject:nil context:nil];
@@ -1230,7 +1233,7 @@ typedef NS_ENUM(NSInteger, BEMInternalTags)
 
 - (NSNumber *)calculatePointValueMode {
     NSArray *filteredArray = [self calculationDataPoints];
-    if (filteredArray.count == 0) return [NSNumber numberWithInt:0];
+    if (filteredArray.count == 0) return 0;
     
     NSExpression *expression = [NSExpression expressionForFunction:@"mode:" arguments:@[[NSExpression expressionForConstantValue:filteredArray]]];
     NSMutableArray *value = [expression expressionValueWithObject:nil context:nil];
@@ -1240,7 +1243,7 @@ typedef NS_ENUM(NSInteger, BEMInternalTags)
 
 - (NSNumber *)calculateLineGraphStandardDeviation {
     NSArray *filteredArray = [self calculationDataPoints];
-    if (filteredArray.count == 0) return [NSNumber numberWithInt:0];
+    if (filteredArray.count == 0) return 0;
     
     NSExpression *expression = [NSExpression expressionForFunction:@"stddev:" arguments:@[[NSExpression expressionForConstantValue:filteredArray]]];
     NSNumber *value = [expression expressionValueWithObject:nil context:nil];
@@ -1250,7 +1253,7 @@ typedef NS_ENUM(NSInteger, BEMInternalTags)
 
 - (NSNumber *)calculateMinimumPointValue {
     NSArray *filteredArray = [self calculationDataPoints];
-    if (filteredArray.count == 0) return [NSNumber numberWithInt:0];
+    if (filteredArray.count == 0) return 0;
     
     NSExpression *expression = [NSExpression expressionForFunction:@"min:" arguments:@[[NSExpression expressionForConstantValue:filteredArray]]];
     NSNumber *value = [expression expressionValueWithObject:nil context:nil];
@@ -1259,7 +1262,7 @@ typedef NS_ENUM(NSInteger, BEMInternalTags)
 
 - (NSNumber *)calculateMaximumPointValue {
     NSArray *filteredArray = [self calculationDataPoints];
-    if (filteredArray.count == 0) return [NSNumber numberWithInt:0];
+    if (filteredArray.count == 0) return 0;
     
     NSExpression *expression = [NSExpression expressionForFunction:@"max:" arguments:@[[NSExpression expressionForConstantValue:filteredArray]]];
     NSNumber *value = [expression expressionValueWithObject:nil context:nil];
@@ -1293,7 +1296,7 @@ typedef NS_ENUM(NSInteger, BEMInternalTags)
 
 - (BOOL)gestureRecognizerShouldBegin:(UIGestureRecognizer *)gestureRecognizer {
     if ([gestureRecognizer isEqual:self.panGesture]) {
-        if (gestureRecognizer.numberOfTouches >= self.touchReportFingersRequired) {
+        if (gestureRecognizer.numberOfTouches > 0) {
             CGPoint translation = [self.panGesture velocityInView:self.panView];
             return fabs(translation.y) < fabs(translation.x);
         } else return NO;
@@ -1301,13 +1304,13 @@ typedef NS_ENUM(NSInteger, BEMInternalTags)
     } else return NO;
 }
 
-- (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer *)otherGestureRecognizer {
+- (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer *)otherGestureRecognizer{
+	    return YES;
+}
+- (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldReceiveTouch:(UITouch *)touch{
 	    return YES;
 }
 
-- (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldReceiveTouch:(UITouch *)touch {
-	    return YES;
-}
 
 - (void)handleGestureAction:(UIGestureRecognizer *)recognizer {
     CGPoint translation = [recognizer locationInView:self.viewForBaselineLayout];
@@ -1395,7 +1398,8 @@ typedef NS_ENUM(NSInteger, BEMInternalTags)
         self.popUpLabel.text = [NSString stringWithFormat:@"%li%@", (long)[dataPoints[(NSInteger) closestDot.tag - DotFirstTag100] integerValue], [self.delegate popUpSuffixForlineGraph:self]];
     else
         self.popUpLabel.text = [NSString stringWithFormat:@"%li", (long)[dataPoints[(NSInteger) closestDot.tag - DotFirstTag100] integerValue]];
-    
+
+
     if (self.enableYAxisLabel == YES && self.popUpView.frame.origin.x <= self.YAxisLabelXOffset && !self.positionYAxisRight) {
         self.xCenterLabel = self.popUpView.frame.size.width/2;
         popUpViewCenter = CGPointMake(self.xCenterLabel + self.YAxisLabelXOffset + 1, self.yCenterLabel);
@@ -1429,8 +1433,8 @@ typedef NS_ENUM(NSInteger, BEMInternalTags)
         if ([self.delegate respondsToSelector:@selector(popUpSuffixForlineGraph:)]) {
             suffix = [self.delegate popUpSuffixForlineGraph:self];
         }
-        if ([self.delegate respondsToSelector:@selector(popUpPrefixForlineGraph:)]) {
-            prefix = [self.delegate popUpPrefixForlineGraph:self];
+        if ([self.delegate respondsToSelector:@selector(lineGraph:popUpPrefixForIndex:)]) {
+            prefix = [self.delegate lineGraph:self popUpPrefixForIndex:index];
         }
         NSNumber *value = dataPoints[index];
         NSString *formattedValue = [NSString stringWithFormat:self.formatStringForValues, value.doubleValue];
