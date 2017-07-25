@@ -155,11 +155,6 @@ IB_DESIGNABLE @interface BEMSimpleLineGraphView : UIView <UIGestureRecognizerDel
 @property (nonatomic) BOOL enableTouchReport;
 
 
-/** The number of fingers required to report touches to the graph's delegate. The default value is 1.
- @discussion Setting this value to greater than 1 might be beneficial in interfaces that allow the graph to scroll and still want to use touch reporting. */
-@property (nonatomic) NSInteger touchReportFingersRequired;
-
-
 /// If set to YES, a label will pop up on the graph when the user touches it. It will be displayed on top of the closest point from the user current touch location. Default value is NO.
 @property (nonatomic) BOOL enablePopUpReport;
 
@@ -195,7 +190,7 @@ IB_DESIGNABLE @interface BEMSimpleLineGraphView : UIView <UIGestureRecognizerDel
 
 
 /** Draws a translucent frame between the graph and any enabled axis, when set to YES. Default value is NO.
- @see enableReferenceXAxisLines or enableReferenceYAxisLines must be set to YES for this property to have any effect.  */
+ @see enableReferenceXAxisLines or enableReferenceYAxisLines must be set to YES for this property to have any affect.  */
 @property (nonatomic) BOOL enableReferenceAxisFrame;
 
 
@@ -282,7 +277,7 @@ IB_DESIGNABLE @interface BEMSimpleLineGraphView : UIView <UIGestureRecognizerDel
 @property (nonatomic) IBInspectable CGFloat sizePoint;
 
 
-/// The color of the circles that represent each point. Default is white at 70% alpha.
+/// The color of the circles that represent each point. Default is white.
 @property (strong, nonatomic) IBInspectable UIColor *colorPoint;
 
 
@@ -303,7 +298,7 @@ IB_DESIGNABLE @interface BEMSimpleLineGraphView : UIView <UIGestureRecognizerDel
 
 
 /// Color of the background of the X-Axis
-@property (strong, nonatomic, nullable) UIColor *colorBackgroundXaxis;
+@property (strong, nonatomic) UIColor *colorBackgroundXaxis;
 
 
 /// Alpha of the background of the X-Axis
@@ -311,7 +306,7 @@ IB_DESIGNABLE @interface BEMSimpleLineGraphView : UIView <UIGestureRecognizerDel
 
 
 /// Color of the background of the Y-Axis
-@property (strong, nonatomic, nullable) UIColor *colorBackgroundYaxis;
+@property (strong, nonatomic) UIColor *colorBackgroundYaxis;
 
 
 /// Alpha of the background of the Y-Axis
@@ -414,7 +409,7 @@ IB_DESIGNABLE @interface BEMSimpleLineGraphView : UIView <UIGestureRecognizerDel
 
 @optional
 
- - (NSString *)lineGraphStringForPopUpLabelAtIndex:(CGFloat)index;
+- (NSString *)lineGraph:(nonnull BEMSimpleLineGraphView *)graph popUpPrefixForIndex:(NSInteger)index;
 
 
 //----- GRAPH EVENTS -----//
@@ -460,7 +455,7 @@ IB_DESIGNABLE @interface BEMSimpleLineGraphView : UIView <UIGestureRecognizerDel
 
 
 /** Optional method to always display some of the pop up labels on the graph.
- @see alwaysDisplayPopUpLabels must be set to YES for this method to have any effect.
+ @see alwaysDisplayPopUpLabels must be set to YES for this method to have any affect.
  @param graph The graph object requesting the total number of points.
  @param index The index from left to right of the points on the graph. The first value for the index is 0.
  @return Return YES if you want the popup label to be displayed for this index. */
