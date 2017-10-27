@@ -426,11 +426,16 @@ typedef NS_ENUM(NSInteger, BEMInternalTags)
         if (self.autoScaleYAxis == YES){
             NSString *maxValueString = [NSString stringWithFormat:self.formatStringForValues, self.maxValue];
             NSString *minValueString = [NSString stringWithFormat:self.formatStringForValues, self.minValue];
-            
+            NSNumberFormatter *numberFormatter = [NSNumberFormatter new];
+            if ([self.delegate respondsToSelector:@selector(numberFormatterForYLabelInLineGraph:)]) {
+                numberFormatter = [self.delegate numberFormatterForYLabelInLineGraph:self];
+            }
+            if (numberFormatter) {
+                maxValueString = [numberFormatter stringFromNumber:@(self.maxValue)];
+            }
             NSString *longestString = @"";
             if (maxValueString.length > minValueString.length) longestString = maxValueString;
             else longestString = minValueString;
-            
             NSString *prefix = @"";
             NSString *suffix = @"";
             
@@ -970,7 +975,14 @@ typedef NS_ENUM(NSInteger, BEMInternalTags)
         for (NSNumber *dotValue in dotValues) {
             CGFloat yAxisPosition = [self yPositionForDotValue:dotValue.floatValue];
             UILabel *labelYAxis = [[UILabel alloc] initWithFrame:frameForLabelYAxis];
+            NSNumberFormatter *numberFormatter = [NSNumberFormatter new];
+            if ([self.delegate respondsToSelector:@selector(numberFormatterForYLabelInLineGraph:)]) {
+                numberFormatter = [self.delegate numberFormatterForYLabelInLineGraph:self];
+            }
             NSString *formattedValue = [NSString stringWithFormat:self.formatStringForValues, dotValue.doubleValue];
+            if (numberFormatter) {
+                formattedValue = [numberFormatter stringFromNumber:@(dotValue.doubleValue)];
+            }
             labelYAxis.text = [NSString stringWithFormat:@"%@%@%@", yAxisPrefix, formattedValue, yAxisSuffix];
             labelYAxis.textAlignment = textAlignmentForLabelYAxis;
             labelYAxis.font = self.labelFont;
