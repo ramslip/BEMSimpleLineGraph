@@ -411,6 +411,7 @@ IB_DESIGNABLE @interface BEMSimpleLineGraphView : UIView <UIGestureRecognizerDel
 
 - (NSString *)lineGraph:(nonnull BEMSimpleLineGraphView *)graph popUpPrefixForIndex:(NSInteger)index;
 
+- (NSNumberFormatter *)numberFormatterForYLabelInLineGraph:(nonnull BEMSimpleLineGraphView *)lineGraph;
 
 //----- GRAPH EVENTS -----//
 
