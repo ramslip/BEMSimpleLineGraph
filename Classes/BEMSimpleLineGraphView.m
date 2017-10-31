@@ -350,6 +350,13 @@ typedef NS_ENUM(NSInteger, BEMInternalTags)
                 /*NSString *maxValueString = [NSString stringWithFormat:self.formatStringForValues, [self calculateMaximumPointValue].doubleValue];*/
                 NSString *maxValueString = @"30-я неделя 2016г. \n";
                 NSString *minValueString = [NSString stringWithFormat:self.formatStringForValues, [self calculateMinimumPointValue].doubleValue];
+                NSNumberFormatter *numberFormatter = [NSNumberFormatter new];
+                if ([self.delegate respondsToSelector:@selector(numberFormatterForYLabelInLineGraph:)]) {
+                    numberFormatter = [self.delegate numberFormatterForYLabelInLineGraph:self];
+                }
+                if (numberFormatter) {
+                    minValueString = [numberFormatter stringFromNumber:[self calculateMinimumPointValue]];
+                }
                 
                 NSString *longestString = @"";
                 if (maxValueString.length > minValueString.length) {
@@ -366,8 +373,9 @@ typedef NS_ENUM(NSInteger, BEMInternalTags)
                 if ([self.delegate respondsToSelector:@selector(popUpPrefixForlineGraph:)]) {
                     prefix = [self.delegate popUpPrefixForlineGraph:self];
                 }
-                
+
                 NSString *fullString = [NSString stringWithFormat:@"%@%@%@", prefix, longestString, suffix];
+
                 
                 NSString *mString = [fullString stringByReplacingOccurrencesOfString:@"[0-9-]" withString:@"N" options:NSRegularExpressionSearch range:NSMakeRange(0, [longestString length])];
                 
@@ -1450,6 +1458,13 @@ typedef NS_ENUM(NSInteger, BEMInternalTags)
         }
         NSNumber *value = dataPoints[index];
         NSString *formattedValue = [NSString stringWithFormat:self.formatStringForValues, value.doubleValue];
+        NSNumberFormatter *numberFormatter = [NSNumberFormatter new];
+        if ([self.delegate respondsToSelector:@selector(numberFormatterForYLabelInLineGraph:)]) {
+            numberFormatter = [self.delegate numberFormatterForYLabelInLineGraph:self];
+        }
+        if (numberFormatter) {
+            formattedValue = [numberFormatter stringFromNumber:value];
+        }
         self.popUpLabel.text = [NSString stringWithFormat:@"%@%@%@", prefix, formattedValue, suffix];
         self.popUpLabel.center = self.popUpView.center;
     }
